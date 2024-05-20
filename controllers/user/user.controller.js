@@ -116,7 +116,7 @@ export const verifyAccount = TryCatch(async (req, res, next) => {
 export const logout = TryCatch(async (req, res, next) => {
     res.cookie("token", null, {
         expires: new Date(Date.now()),
-        httpOnly: true,
+        http: true,
     });
 
     res.status(200).json({
@@ -270,5 +270,60 @@ export const addEditPreferences = TryCatch(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: "Preferences updated successfully",
+    });
+});
+
+export const uploadResume = TryCatch(async (req, res, next) => {
+    const user = await User.findById(req.user);
+
+    if (!user) {
+        return next(CustomErrorHanlder.badRequest("User not found"));
+    }
+
+    if (!req.file) {
+        return next(CustomErrorHanlder.badRequest("Resume is required"));
+    }
+    const { path, originalname } = req.file;
+    if (user.resume && user.resume.public_id) {
+        const response = await cloudinaryServices.destroy(
+            user.resume.public_id
+        );
+    }
+
+    const { public_id, url } = await cloudinaryServices.upload(path);
+
+    user.resume = {
+        public_id,
+        url,
+        orgFileName: originalname,
+    };
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Resume uploaded successfully",
+    });
+});
+
+export const removeResume = TryCatch(async (req, res, next) => {
+    const user = await User.findById(req.user).select("+resume.public_id");
+
+    if (!user) {
+        return next(CustomErrorHanlder.notFound("User not found"));
+    }
+
+    if (!user.resume) {
+        return next(CustomErrorHanlder.badRequest("Resume not found"));
+    }
+
+    await cloudinaryServices.destroy(user.resume.public_id);
+
+    user.resume = undefined;
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Resume removed successfully",
     });
 });

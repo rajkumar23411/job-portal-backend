@@ -4,6 +4,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js";
 import userRoutes from "./routes/user/user.routes.js";
+import companyRoutes from "./routes/company/company.routes.js";
+import jobRoutes from "./routes/job/job.routes.js";
 
 // env file configuration
 dotenv.config({ path: "./.env" });
@@ -23,7 +25,9 @@ app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // routes
-app.use("/api/v1", userRoutes);
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/company", companyRoutes);
+app.use("/api/v1/job", jobRoutes);
 
 // error handling middleware
 app.use(errorHandler);

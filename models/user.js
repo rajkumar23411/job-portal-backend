@@ -42,8 +42,14 @@ const userSchema = new mongoose.Schema(
             default: "user",
         },
         avatar: {
-            public_id: { type: String },
+            public_id: { type: String, select: false },
             url: { type: String },
+        },
+        resume: {
+            orgFileName: { type: String },
+            public_id: { type: String, select: false },
+            url: { type: String },
+            uploadedOn: { type: Date, default: Date.now() },
         },
         isAccountVerified: {
             type: Boolean,

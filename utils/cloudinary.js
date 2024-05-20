@@ -33,17 +33,28 @@ const cloudinaryServices = {
             const res = await cloudinary.uploader.upload(localFilePath, {
                 resource_type: "auto",
             });
-
+            console.log(res);
             if (!res) {
                 throw new Error("Could not upload file to cloudinary");
             }
-
             return res;
         } catch (error) {
             console.log("Error while uploading file", error);
             throw new Error(error.message);
         } finally {
             await deleteLocalFile(localFilePath);
+        }
+    },
+    async destroy(id) {
+        try {
+            const res = await cloudinary.uploader.destroy(id);
+
+            if (!res) {
+                throw new Error("Could not delete file from cloudinary");
+            }
+            return res;
+        } catch (error) {
+            throw new Error(error.message);
         }
     },
 };
