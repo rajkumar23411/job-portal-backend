@@ -1,7 +1,11 @@
-import { applyToJob } from "../../controllers/application/application.controller.js";
+import {
+    applyToJob,
+    getJobApplications,
+} from "../../controllers/application/application.controller.js";
 import {
     addRemoveJobToBookmark,
     getAllJobs,
+    getJobsAsPerPreference,
     loadBookMarks,
     loadSingleJob,
 } from "../../controllers/job/job.controller.js";
@@ -17,5 +21,7 @@ jobRoutes.post("/bookmark/:id", addRemoveJobToBookmark);
 jobRoutes.get("/my/bookmarks", loadBookMarks);
 jobRoutes.get("/details/:id", loadSingleJob);
 jobRoutes.post("/apply/:jobId", applyToJob);
+jobRoutes.get("/preference", getJobsAsPerPreference);
+jobRoutes.get("/applications/:jobId", getJobApplications);
 
 export default jobRoutes;

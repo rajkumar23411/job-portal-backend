@@ -5,13 +5,14 @@ class Features {
     }
     filter() {
         const query = { ...this.queryString };
+        console.log(query);
         const excludedFields = [
-            "page",
             "profile",
             "location",
-            "keyword",
             "workMode",
             "jobType",
+            "page",
+            "experience",
         ];
         excludedFields.forEach((el) => delete query[el]);
 
@@ -22,12 +23,18 @@ class Features {
         );
 
         if (this.queryString.location) {
-            const locations = this.queryString.location.split(",");
-            this.query = this.query.where({ locations: { $in: locations } });
+            const locations = this.queryString.location
+                .split(",")
+                .map((loc) => new RegExp(loc, "i"));
+            this.query = this.query.where({
+                locations,
+            });
         }
 
         if (this.queryString.workMode) {
-            this.query = this.query.where({ workMode: this.queryString.mode });
+            this.query = this.query.where({
+                workMode: this.queryString.workMode,
+            });
         }
 
         if (this.queryString.jobType) {
@@ -36,6 +43,17 @@ class Features {
             });
         }
         if (this.queryString.profile) {
+            const profiles = this.queryString.profile.split(",");
+            this.query = this.query.where({
+                profile: { $in: profiles },
+            });
+        }
+
+        if (this.queryString.experience) {
+            const experience = new RegExp(this.queryString.experience, "i");
+            this.query = this.query.where({
+                experience,
+            });
         }
 
         this.query.find(JSON.parse(queryString));

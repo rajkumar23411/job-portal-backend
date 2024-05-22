@@ -1,6 +1,7 @@
 import TryCatch from "./../../utils/TryCatch.js";
 import Bookmark from "../../models/bookmark.js";
 import Job from "../../models/job.js";
+import User from "../../models/user.js";
 import CustomErrorHanlder from "../../utils/CustomErrorHandler.js";
 import Features from "../../utils/Features.js";
 
@@ -88,5 +89,20 @@ export const loadSingleJob = TryCatch(async (req, res, next) => {
     res.status(200).json({
         success: true,
         job,
+    });
+});
+
+export const getJobsAsPerPreference = TryCatch(async (req, res, next) => {
+    const user = await User.findById(req.user);
+    const jobs = await Job.find({
+        $or: [
+            { workMode: { $in: user.workPreference } },
+            { profile: { $in: user.careerPreference } },
+        ],
+    }).populate("company", "name logo");
+
+    res.status(200).json({
+        success: true,
+        jobs,
     });
 });

@@ -8,10 +8,10 @@ const applicationSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     status: {
         type: String,
-        enum: ["applied", "shortlisted", "interview", "rejected", "hired"],
+        enum: ["applied", "shortlist", "reject", "hire"],
         default: "applied",
     },
-    date: {
+    appliedAt: {
         type: Date,
         default: Date.now,
     },
