@@ -5,7 +5,6 @@ class Features {
     }
     filter() {
         const query = { ...this.queryString };
-        console.log(query);
         const excludedFields = [
             "profile",
             "location",
@@ -13,6 +12,8 @@ class Features {
             "jobType",
             "page",
             "experience",
+            "status",
+            "jobTitle",
         ];
         excludedFields.forEach((el) => delete query[el]);
 
@@ -53,6 +54,13 @@ class Features {
             const experience = new RegExp(this.queryString.experience, "i");
             this.query = this.query.where({
                 experience,
+            });
+        }
+
+        if (this.queryString.status) {
+            const status = new RegExp(this.queryString.status, "i");
+            this.query = this.query.where({
+                status,
             });
         }
 

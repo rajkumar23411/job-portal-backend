@@ -5,6 +5,11 @@ const questionSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Company",
     },
+    category: {
+        type: String,
+        enum: ["General knowledge", "Aptitude", "Reasoning", "Technical"],
+        required: true,
+    },
     title: {
         type: String,
         required: true,
