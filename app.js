@@ -18,7 +18,10 @@ const app = express();
 
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: [
+            "https://job-portal-frontend-eta-two.vercel.app/sign-in",
+            "http://localhost:5173",
+        ],
         credentials: true,
     })
 );
